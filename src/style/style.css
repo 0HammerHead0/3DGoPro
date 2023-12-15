@@ -1,19 +1,18 @@
 body {
-    margin: 0;
-    background-color: black; /* Set the background to black */
-    overflow: hidden; /* Disable default scrolling behavior */
+  margin: 0;
+  background-color: black; /* Set the background to black */
+  overflow: hidden; /* Disable default scrolling behavior */
 }
 
 .page {
-    width: 100vw;
-    height: 100vh;
-    overflow-y: scroll; /* Enable vertical scrolling within each page */
-    scroll-snap-type: y mandatory; /* Snap scrolling to each page */
-    scroll-behavior: smooth; /* Smooth scrolling between pages */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white; /* Set text color to white for visibility */
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll; /* Enable vertical scrolling within each page */
+  scroll-snap-type: y mandatory; /* Snap scrolling to each page */
+  scroll-behavior: smooth; /* Smooth scrolling between pages */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white; /* Set text color to white for visibility */
 }
-  
