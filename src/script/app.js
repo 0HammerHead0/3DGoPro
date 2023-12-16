@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import gsap from 'gsap';
 import '../style/style.css';
 
@@ -54,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function handleSectionChange(activeSection) {
-  console.log(activeSection);
+  // console.log(activeSection);
   if (activeSection === 1) {
     animateToFrontFace();
   } else if (activeSection === 2) {
@@ -82,29 +83,37 @@ function animateToBackFace() {
 }
 
 // load a 3D model from models\gopro-hero-11-mini\source\GoPro HERO11 Mini.obj
-const loader = new GLTFLoader();
+// ---------------------- LOADING 3D MODEL ----------------------
+const loader = new OBJLoader();
+loader.setPath('models/gopro-hero-11-mini/source/');
 loader.load(
-  'D:\\ThreeJS_Project\\3DGoPro\\models\\gopro-hero-11-mini\\source\\gopro.obj', // Replace 'path/to/your/model.obj' with your actual model path
-  (obj) => {
-    obj.scale.set(0.1, 0.1, 0.1); // Adjust the scale as needed
-    obj.position.set(0, 0, 0); // Set the position of the model
-    scene.add(obj);
-
-    // Create a grey material for the model
-    const greyMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
-
-    // Apply the grey material to all meshes in the object
-    obj.traverse((child) => {
-      if (child instanceof THREE.Mesh) {
-        child.material = greyMaterial;
-      }
-    });
+  'gopro.obj',
+  function (object) {
+    scene.add(object);
   },
-  undefined,
-  (error) => {
-    console.error('Error loading the model:', error);
+  function (xhr) {
+    console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+  },
+  function (error) {
+    console.error('An error occurred:', error);
   }
 );
+
+// ---------------------------------------------------------------
+
+// ----------------------LIGHTING----------------------
+const keyLight = new THREE.DirectionalLight(new THREE.Color('hsl(30,100%,75%)'), 1);
+keyLight.position.set(-100, 0, 100);
+scene.add(keyLight);
+const fillLight = new THREE.DirectionalLight(new THREE.Color('hsl(240,100%,75%)'), 0.5);
+fillLight.position.set(10, 10, 10);
+scene.add(fillLight);
+const backLight = new THREE.DirectionalLight(0xffffff, 1.0);
+backLight.position.set(-10, 10, -10);
+scene.add(backLight);
+
+// ---------------------------------------------------------------
+
 time = Date.now();
 function tick(){
   // Update Scrollbar
