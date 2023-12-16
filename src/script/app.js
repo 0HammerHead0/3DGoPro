@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import gsap from 'gsap';
 import '../style/style.css';
 
@@ -11,12 +13,22 @@ const sizes = {
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000);
 const canvas = document.querySelector('.webgl');
+const OrbitControl = new OrbitControls(camera, canvas);
+OrbitControl.enableDamping = true;
 const renderer = new THREE.WebGLRenderer({ canvas , alpha: true });
 renderer.setSize(sizes.width, sizes.height);
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
+const materials = [
+  new THREE.MeshBasicMaterial({ color: 0xff0000 }), // Right face: red
+  new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // Left face: green
+  new THREE.MeshBasicMaterial({ color: 0x0000ff }), // Top face: blue
+  new THREE.MeshBasicMaterial({ color: 0xffff00 }), // Bottom face: yellow
+  new THREE.MeshBasicMaterial({ color: 0x00ffff }), // Front face: cyan
+  new THREE.MeshBasicMaterial({ color: 0xff00ff }), // Back face: magenta
+];
+const cube = new THREE.Mesh(geometry, materials);
+const axesHelper = new THREE.AxesHelper(); // 'size' determines the length of the axes lines
+scene.add(cube,axesHelper);
 
 camera.position.z = 2;
 
@@ -42,17 +54,55 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function handleSectionChange(activeSection) {
-  // Replace this with your desired actions based on the active section
-  console.log(`Active Section: ${activeSection}`);
-  // Call your functions or trigger events here
-  // Example: YourFunctionName();
+  console.log(activeSection);
+  if (activeSection === 1) {
+    animateToFrontFace();
+  } else if (activeSection === 2) {
+    animateToTopFace();
+  } else if (activeSection === 3) {
+    animateToRightFace();
+  } else if (activeSection === 4) {
+    animateToBackFace();
+  }
 }
+function animateToFrontFace() {
+  gsap.to(cube.rotation, { duration: 1, x: 0, y: 0, z: 0, ease: "power2.inOut" });
+}
+
+function animateToTopFace() {
+  gsap.to(cube.rotation, { duration: 1, x: -Math.PI / 2, y: 0, z: 0, ease: "power2.inOut" });
+}
+
+function animateToRightFace() {
+  gsap.to(cube.rotation, { duration: 1, x: 0, y: -Math.PI / 2, z: 0, ease: "power2.inOut" });
+}
+
+function animateToBackFace() {
+  gsap.to(cube.rotation, { duration: 1, x: 0, y: Math.PI, z: 0, ease: "power2.inOut" });
+}
+
+
+time = Date.now();
+function tick(){
+  // Update Scrollbar
+  const currentTime = Date.now();
+  time = currentTime;
+  // Update Orbital Controls
+  OrbitControl.update();
+
+
+  requestAnimationFrame(tick);
+  renderer.render(scene, camera);
+  
+}
+tick();
 
 
 function animate() {
   requestAnimationFrame(animate);
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
+  cube.rotation.x += 0.005;
+  OrbitControl.update();
+  cube.rotation.y += 0.005;
   renderer.render(scene, camera);
 }
-animate();
+// animate();

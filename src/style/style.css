@@ -13,6 +13,7 @@ body {
   max-width: 100wh;
   font-size: 60px;
   height: 100vh;
+  font-family: Michroma;
 }
 
 .scroll-container {
