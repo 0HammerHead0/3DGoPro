@@ -81,7 +81,30 @@ function animateToBackFace() {
   gsap.to(cube.rotation, { duration: 1, x: 0, y: Math.PI, z: 0, ease: "power2.inOut" });
 }
 
+// load a 3D model from models\gopro-hero-11-mini\source\GoPro HERO11 Mini.obj
+const loader = new GLTFLoader();
+loader.load(
+  'D:\\ThreeJS_Project\\3DGoPro\\models\\gopro-hero-11-mini\\source\\gopro.obj', // Replace 'path/to/your/model.obj' with your actual model path
+  (obj) => {
+    obj.scale.set(0.1, 0.1, 0.1); // Adjust the scale as needed
+    obj.position.set(0, 0, 0); // Set the position of the model
+    scene.add(obj);
 
+    // Create a grey material for the model
+    const greyMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
+
+    // Apply the grey material to all meshes in the object
+    obj.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        child.material = greyMaterial;
+      }
+    });
+  },
+  undefined,
+  (error) => {
+    console.error('Error loading the model:', error);
+  }
+);
 time = Date.now();
 function tick(){
   // Update Scrollbar
