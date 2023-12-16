@@ -55,3 +55,31 @@ body {
 .scroll-area:nth-of-type(4) {
   background: black;
 }
+
+.pers-head{
+  color: #FFF;
+  font-family: Michroma;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  left: 5%;
+  top: 20%;
+  position:fixed;
+  z-index: 5;
+}
+.webgl-content{
+  position: fixed;
+  top: 25%;
+  left: 50;
+  width: 40%;
+  height: 50%;
+  z-index: 5;
+  background: transparent;
+  color: white;
+  overflow: hidden;
+}
+.webgl{
+  z-index:10;
+  width:100%;
+}
