@@ -9,8 +9,7 @@ const sizes = {
   width: container.clientWidth * 1,
   height: container.clientHeight * 1
 };
-console.log("HELOoooooooooooooooooooooooooo")
-console.log(THREE.REVISION); 
+// console.log(THREE.REVISION); 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000);
 const canvas = document.querySelector('.webgl');
@@ -28,11 +27,27 @@ const materials = [
   new THREE.MeshBasicMaterial({ color: 0xff00ff }), // Back face: magenta
 ];
 const cube = new THREE.Mesh(geometry, materials);
-const axesHelper = new THREE.AxesHelper(); // 'size' determines the length of the axes lines
-// scene.add(cube);
-scene.add(axesHelper);
+const axesHelper = new THREE.AxesHelper();
+// scene.add(axesHelper);
+camera.position.set(0, 0, 0.7); // Set the camera to its initial position
+function resetCamera() {
+    gsap.to(camera.position, {
+        duration: 0.5,
+        x: 0,
+        y: 0,
+        z: 0.7,
+        ease: "power2.inOut"
+    });
 
-camera.position.z = 2;
+    gsap.to(camera.rotation, {
+        duration: 0.5,
+        x: 0,
+        y: 0,
+        z: 0,
+        ease: "power2.inOut"
+    });
+}
+resetCamera();
 var model;
 document.addEventListener('DOMContentLoaded', function() {
   const sections = document.querySelectorAll('.scroll-area');
@@ -42,98 +57,103 @@ document.addEventListener('DOMContentLoaded', function() {
       const scrollPos = this.scrollTop;
       let activeSection = 0;
       sections.forEach((section, index) => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.offsetHeight;
-
-        if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
-          activeSection = index + 1;
-        }
-      });
-
-      handleSectionChange(activeSection);
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.offsetHeight;
+          
+          if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+              activeSection = index + 1;
+            }
+        });
+        
+        handleSectionChange(activeSection);
     });
-  }
+}
 });
 
 function handleSectionChange(activeSection) {
-  console.log(activeSection);
-  if (activeSection === 1) {
-    animateToFrontFace();
-  } else if (activeSection === 2) {
-    animateToTopFace();
-  } else if (activeSection === 3) {
-    animateToRightFace();
-  } else if (activeSection === 4) {
-    animateToBackFace();
-  }
+    console.log(activeSection);
+    if (activeSection === 1) {
+        resetCamera();
+        animateToFrontFace();
+    } else if (activeSection === 2) {
+        resetCamera();
+        animateToTopFace();
+    } else if (activeSection === 3) {
+        resetCamera();
+        animateToRightFace();
+    } else if (activeSection === 4) {
+        resetCamera();
+        animateToBackFace();
+    }
 }
 function animateToFrontFace() {
-  gsap.to(model.rotation, { duration: 1, x: 0, y: 0, z: 0, ease: "power2.inOut" });
+    gsap.to(model.rotation, { duration: 0.7, x: Math.PI, y:0, z: 0, ease: "power2.inOut" });
 }
 
 function animateToTopFace() {
-  gsap.to(model.rotation, { duration: 1, x: -Math.PI / 2, y: 0, z: 0, ease: "power2.inOut" });
+    gsap.to(model.rotation, { duration: 0.7, x: Math.PI/2 , y:0, z:  Math.PI, ease: "power2.inOut" });
 }
 
 function animateToRightFace() {
-  gsap.to(model.rotation, { duration: 1, x: 0, y: -Math.PI / 2, z: 0, ease: "power2.inOut" });
+    gsap.to(model.rotation, { duration: 0.7, x: 0, y: Math.PI / 2, z: Math.PI, ease: "power2.inOut" });
 }
 
 function animateToBackFace() {
-  gsap.to(model.rotation, { duration: 1, x: 0, y: Math.PI, z: 0, ease: "power2.inOut" });
+    gsap.to(model.rotation, { duration: 0.7, x:Math.PI, y:-Math.PI/2, z:0 , ease: "power2.inOut" });
 }
 
 
 var time = Date.now();
 function tick(){
-  // Update Scrollbar
-  const currentTime = Date.now();
-  time = currentTime;
-  // Update Orbital Controls
-  OrbitControl.update();
-
-
-  requestAnimationFrame(tick);
-  renderer.render(scene, camera);
-  
+    // Update Scrollbar
+    const currentTime = Date.now();
+    time = currentTime;
+    // Update Orbital Controls
+    OrbitControl.update();
+    
+    
+    requestAnimationFrame(tick);
+    renderer.render(scene, camera);
+    
 }
 tick();
 
 
 function animate() {
-  requestAnimationFrame(animate);
-  cube.rotation.x += 0.005;
-  OrbitControl.update();
-  cube.rotation.y += 0.005;
-  renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+    cube.rotation.x += 0.005;
+    OrbitControl.update();
+    cube.rotation.y += 0.005;
+    renderer.render(scene, camera);
 }
 // animate();
 
 
-const keyLight = new THREE.DirectionalLight(new THREE.Color('hsl(30,100%,75%)'), 1);
-keyLight.position.set(-100, 0, 100);
+const keyLight = new THREE.DirectionalLight(new THREE.Color('hsl(198, 100%, 50%)'), 50);
+keyLight.position.set(-10, 10, 5);
 scene.add(keyLight);
-const fillLight = new THREE.DirectionalLight(new THREE.Color('hsl(240,100%,75%)'), 0.5);
-fillLight.position.set(10, 10, 10);
+const fillLight = new THREE.DirectionalLight(new THREE.Color('hsl(305, 100%, 50%)'), 10);
+fillLight.position.set(10, 10, 5);
 scene.add(fillLight);
-const backLight = new THREE.DirectionalLight(0xffffff, 1.0);
+const backLight = new THREE.DirectionalLight(0xffffff, 50);
 backLight.position.set(-10, 10, -10);
 scene.add(backLight);
+const frontLight = new THREE.DirectionalLight(0xffffff, 5);
+frontLight.position.set(0, -4, 0);
+scene.add(frontLight);
 
 
 const gltfLoader = new GLTFLoader();
 gltfLoader.load(
-  'models/gltf/scene.gltf',
-  (gltf) =>
+    'models/gltf/scene.gltf',
+    (gltf) =>
     {
         model = gltf.scene.children[0];
         model.scale.set(0.01, 0.01, 0.01);
         model.rotation.y = Math.PI;
         scene.add(model); 
-        // while (gltf.scene.children.length)
-        // {
-        // scene.add(gltf.scene.children[0]);
-        // }
+        fillLight.target = model;
+        frontLight.target = model;
     },
     (progress) =>
     {
@@ -143,6 +163,6 @@ gltfLoader.load(
     {
         console.log('error', error);
     }
-
 );
-
+        
+        
