@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import gsap from 'gsap';
 import './style.css';
 
@@ -10,7 +9,8 @@ const sizes = {
   width: container.clientWidth * 1,
   height: container.clientHeight * 1
 };
-
+console.log("HELOoooooooooooooooooooooooooo")
+console.log(THREE.REVISION); 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000);
 const canvas = document.querySelector('.webgl');
@@ -32,9 +32,8 @@ const axesHelper = new THREE.AxesHelper(); // 'size' determines the length of th
 // scene.add(cube);
 scene.add(axesHelper);
 
-
 camera.position.z = 2;
-
+var model;
 document.addEventListener('DOMContentLoaded', function() {
   const sections = document.querySelectorAll('.scroll-area');
 
@@ -57,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function handleSectionChange(activeSection) {
-  // console.log(activeSection);
+  console.log(activeSection);
   if (activeSection === 1) {
     animateToFrontFace();
   } else if (activeSection === 2) {
@@ -69,51 +68,21 @@ function handleSectionChange(activeSection) {
   }
 }
 function animateToFrontFace() {
-  gsap.to(cube.rotation, { duration: 1, x: 0, y: 0, z: 0, ease: "power2.inOut" });
+  gsap.to(model.rotation, { duration: 1, x: 0, y: 0, z: 0, ease: "power2.inOut" });
 }
 
 function animateToTopFace() {
-  gsap.to(cube.rotation, { duration: 1, x: -Math.PI / 2, y: 0, z: 0, ease: "power2.inOut" });
+  gsap.to(model.rotation, { duration: 1, x: -Math.PI / 2, y: 0, z: 0, ease: "power2.inOut" });
 }
 
 function animateToRightFace() {
-  gsap.to(cube.rotation, { duration: 1, x: 0, y: -Math.PI / 2, z: 0, ease: "power2.inOut" });
+  gsap.to(model.rotation, { duration: 1, x: 0, y: -Math.PI / 2, z: 0, ease: "power2.inOut" });
 }
 
 function animateToBackFace() {
-  gsap.to(cube.rotation, { duration: 1, x: 0, y: Math.PI, z: 0, ease: "power2.inOut" });
+  gsap.to(model.rotation, { duration: 1, x: 0, y: Math.PI, z: 0, ease: "power2.inOut" });
 }
 
-// load a 3D model from models\gopro-hero-11-mini\source\GoPro HERO11 Mini.obj
-// ---------------------- LOADING 3D MODEL ----------------------
-const loader = new GLTFLoader();
-const  filePath='./../public/models/gltf/scene.gltf';
-loader.load(filePath,
-  function(gltf) {
-    scene.add(gltf.scene)
-  },
-  function(xhr) {
-    console.log((xhr.loaded / xhr.total * 100) + '% loaded')
-  },
-  function(error) {
-    console.log('An error happened',error);
-  }
-);
-
-// ---------------------------------------------------------------
-
-// ----------------------LIGHTING----------------------
-// const keyLight = new THREE.DirectionalLight(new THREE.Color('hsl(30,100%,75%)'), 1);
-// keyLight.position.set(-100, 0, 100);
-// scene.add(keyLight);
-// const fillLight = new THREE.DirectionalLight(new THREE.Color('hsl(240,100%,75%)'), 0.5);
-// fillLight.position.set(10, 10, 10);
-// scene.add(fillLight);
-// const backLight = new THREE.DirectionalLight(0xffffff, 1.0);
-// backLight.position.set(-10, 10, -10);
-// scene.add(backLight);
-
-// ---------------------------------------------------------------
 
 var time = Date.now();
 function tick(){
@@ -139,3 +108,41 @@ function animate() {
   renderer.render(scene, camera);
 }
 // animate();
+
+
+const keyLight = new THREE.DirectionalLight(new THREE.Color('hsl(30,100%,75%)'), 1);
+keyLight.position.set(-100, 0, 100);
+scene.add(keyLight);
+const fillLight = new THREE.DirectionalLight(new THREE.Color('hsl(240,100%,75%)'), 0.5);
+fillLight.position.set(10, 10, 10);
+scene.add(fillLight);
+const backLight = new THREE.DirectionalLight(0xffffff, 1.0);
+backLight.position.set(-10, 10, -10);
+scene.add(backLight);
+
+
+const gltfLoader = new GLTFLoader();
+gltfLoader.load(
+  'models/gltf/scene.gltf',
+  (gltf) =>
+    {
+        model = gltf.scene.children[0];
+        model.scale.set(0.01, 0.01, 0.01);
+        model.rotation.y = Math.PI;
+        scene.add(model); 
+        // while (gltf.scene.children.length)
+        // {
+        // scene.add(gltf.scene.children[0]);
+        // }
+    },
+    (progress) =>
+    {
+        console.log('progress', progress);
+    },
+    (error) =>
+    {
+        console.log('error', error);
+    }
+
+);
+
