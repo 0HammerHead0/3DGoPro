@@ -1,0 +1,76 @@
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  background: #000;
+  margin: 0%;
+  padding: 0%;
+}
+
+.scroll-container, .scroll-area {
+  max-width: 100wh;
+  height: 100vh;
+  font-family: Michroma;
+  font-size: 60px;
+}
+
+.scroll-container {
+  scroll-snap-type: y mandatory;
+  overflow: auto;
+}
+
+.scroll-area {
+  scroll-snap-align: center;
+}
+
+.scroll-container, .scroll-area {
+  margin: 0;
+}
+
+.scroll-area {
+  color: #fff;
+  background: #000;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.scroll-area:first-of-type, .scroll-area:nth-of-type(2), .scroll-area:nth-of-type(3), .scroll-area:nth-of-type(4) {
+  background: #000;
+}
+
+.pers-head {
+  color: #fff;
+  z-index: 5;
+  font-family: Michroma;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  position: fixed;
+  top: 20%;
+  left: 5%;
+}
+
+.webgl-content {
+  z-index: 5;
+  color: #fff;
+  background: none;
+  width: 40%;
+  height: 50%;
+  position: fixed;
+  top: 25%;
+  left: 50px;
+  overflow: hidden;
+}
+
+.webgl {
+  z-index: 10;
+  width: 100%;
+}
+
+/*# sourceMappingURL=index.2cdaf7bc.css.map */
