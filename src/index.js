@@ -29,7 +29,7 @@ const materials = [
 const cube = new THREE.Mesh(geometry, materials);
 const axesHelper = new THREE.AxesHelper();
 // scene.add(axesHelper);
-camera.position.set(0, 0, 2); // Set the camera to its initial position
+camera.position.set(-0.4 , -0.3, 0.95); // Set the camera to its initial position
 function resetCamera() {
     gsap.to(camera.position, {
         duration: 0.5,
@@ -38,7 +38,7 @@ function resetCamera() {
         z: 2,
         ease: "power2.inOut"
     });
-
+    
     gsap.to(camera.rotation, {
         duration: 0.5,
         x: 0,
@@ -47,8 +47,19 @@ function resetCamera() {
         ease: "power2.inOut"
     });
 }
-resetCamera();
 var model;
+const slogan = document.querySelector('.slogan');
+slogan.style.opacity = 1;
+slogan.style.marginLeft = '200px';
+const heading = document.querySelectorAll('.heading');
+// loop over heading and opacity to 0
+heading.forEach((element) => {
+    element.style.opacity = 0;
+});
+const content = document.querySelectorAll('.content');
+content.forEach((element) => {
+    element.style.opacity = 0;
+});
 var prevSection = 0;
 var currSection = 1;
 document.addEventListener('DOMContentLoaded', function() {
@@ -57,8 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.scroll-container').addEventListener('scroll', function() {
             const scrollPos = this.scrollTop;
             let activeSection = 0;
-
-            // Find the active section based on scroll position
+            slogan.style.opacity = 0;
             sections.forEach((section, index) => {
                 const sectionTop = section.offsetTop;
                 const sectionHeight = section.offsetHeight;
@@ -70,8 +80,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (activeSection !== currSection) {
                 prevSection = currSection;
                 currSection = activeSection;
-                gsap.to(sections[prevSection - 1], { opacity: 0, duration: 0.4 });
-                gsap.to(sections[currSection - 1], { opacity: 1, duration: 0.4 });
+                gsap.to(sections[prevSection - 1].querySelector('.content'), { opacity: 0, duration: 0.4 });
+                gsap.to(sections[prevSection - 1].querySelector('.heading'), { opacity: 0, duration: 0.4 });
+                gsap.to(sections[currSection - 1].querySelector('.content'), { opacity: 1, duration: 0.4 });
+                gsap.to(sections[currSection - 1].querySelector('.heading'), { opacity: 1, duration: 0.4 });
                 handleSectionChange(activeSection);
             }
         });
@@ -93,6 +105,7 @@ function handleSectionChange(activeSection) {
         animateToBackFace();
     }
 }
+
 function animateToFrontFace() {
     gsap.to(model.rotation, { duration: 0.7, x: Math.PI, y:0, z: 0, ease: "power2.inOut" });
 }
@@ -173,4 +186,44 @@ gltfLoader.load(
     }
 );
         
-        
+
+
+
+// const container_ = document.querySelector('.webgl-content');
+
+// function morphBackground() {
+//   gsap.to(container_, {
+//     duration: 3,
+//     backgroundSize: '100% 100%', // Transition to full background size
+//     ease: 'power2.inOut',
+//     onComplete: function () {
+//       // Change the background to transparent after animation completion
+//       container.style.background = 'transparent';
+//     }
+//   });
+// }
+
+// Get the elements
+const webglElement = document.querySelector('.webgl');
+const blobElement = document.getElementById('blob');
+const blurElement = document.getElementById('blur');
+
+// Get the center coordinates of the webgl element
+const webglRect = webglElement.getBoundingClientRect();
+const webglCenterX = webglRect.left + webglRect.width / 2;
+const webglCenterY = webglRect.top + webglRect.height / 2;
+
+// Calculate blob element's position based on the webgl center
+const blobWidth = blobElement.offsetWidth;
+const blobHeight = blobElement.offsetHeight;
+const blurWidth =  webglRect.width;
+const blurHeight = webglRect.height;
+// Set the position of blob element to align centers
+blobElement.style.position = 'absolute';
+blobElement.style.left = `${webglCenterX - blobWidth / 2}px`; // Adjusting for half the width
+blobElement.style.top = `${webglCenterY - blobHeight / 2}px`; // Adjusting for half the height
+blurElement.style.position = 'absolute';
+blurElement.style.left = `${webglCenterX - blurWidth / 2}px`; // Adjusting for half the width
+blurElement.style.top = `${webglCenterY - blurHeight / 2}px`; // Adjusting for half the height
+blurElement.style.width = `${blurWidth}px`; // Adjusting for half the width
+blurElement.style.height = `${blurHeight}px`; // Adjusting for half the height
