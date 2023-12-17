@@ -3,86 +3,68 @@
 }
 
 body {
-  padding:0%;
-  margin:0%;
+  padding: 0;
+  margin: 0;
   background: black;
   background-image: radial-gradient(
-    rgba(255,255,255,0.1) 5%,
+    rgba(255, 255, 255, 0.1) 5%,
     transparent 10%
   );
   background-position: 0% 0%;
   background-size: 6vmin 6vmin;
-  position:fixed;
-  left: 0;
-  top: 0;
-  z-index:1;
+  
+  background-position: center;
+  position: fixed;
+  width:100vw;
 }
+
 .scroll-container{
-  min-width: 100wh;
-  font-size: 60px;
+  min-width: 100vw;
   height: 100vh;
   font-family: Michroma;
-  z-index: 2;
+  z-index: 5;
   overflow: auto;
   scroll-snap-type: y mandatory;
   margin: 0 ;
 }
 .scroll-area {
   min-width: 100wh;
-  font-size: 60px;
   height: 100vh;
-  font-family: Michroma;
-  z-index: 3;
+  z-index: 5;
   scroll-snap-align: center;
   margin: 0 ;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: black;
   color: white;
+  opacity: 0;
 }
-
-.scroll-area:nth-of-type(1) {
-  background: black;
-}
-
-.scroll-area:nth-of-type(2) {
-  background: black
-}
-
-.scroll-area:nth-of-type(3) {
-  background: black;
-}
-
-.scroll-area:nth-of-type(4) {
-  background: black;
-}
-
 .pers-head{
   color: #FFF;
   font-family: Michroma;
-  font-size: 32px;
+  font-size: 39px;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 700;
   line-height: normal;
   left: 5%;
   top: 20%;
   position:fixed;
-  z-index: 5;
+  z-index: 6;
 }
 .webgl-content{
   position: fixed;
   top: 25%;
-  left: 50;
   width: 40%;
   height: 50%;
   z-index: 5;
-  background: transparent;
   color: white;
   overflow: hidden;
+  background: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 50%);
 }
-.webgl{
-  z-index:10;
-  width:100%;
+.heading,.content{
+  text-align:left ;
+  position:relative;
+  width:60%;
+  left:20%;
 }

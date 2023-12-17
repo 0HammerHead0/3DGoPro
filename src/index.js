@@ -29,13 +29,13 @@ const materials = [
 const cube = new THREE.Mesh(geometry, materials);
 const axesHelper = new THREE.AxesHelper();
 // scene.add(axesHelper);
-camera.position.set(0, 0, 0.7); // Set the camera to its initial position
+camera.position.set(0, 0, 2); // Set the camera to its initial position
 function resetCamera() {
     gsap.to(camera.position, {
         duration: 0.5,
         x: 0,
         y: 0,
-        z: 0.7,
+        z: 2,
         ease: "power2.inOut"
     });
 
@@ -49,27 +49,34 @@ function resetCamera() {
 }
 resetCamera();
 var model;
+var prevSection = 0;
+var currSection = 1;
 document.addEventListener('DOMContentLoaded', function() {
-  const sections = document.querySelectorAll('.scroll-area');
+    const sections = document.querySelectorAll('.scroll-area');
+    if (sections.length > 0) {
+        document.querySelector('.scroll-container').addEventListener('scroll', function() {
+            const scrollPos = this.scrollTop;
+            let activeSection = 0;
 
-  if (sections.length > 0) {
-    document.querySelector('.scroll-container').addEventListener('scroll', function() {
-      const scrollPos = this.scrollTop;
-      let activeSection = 0;
-      sections.forEach((section, index) => {
-          const sectionTop = section.offsetTop;
-          const sectionHeight = section.offsetHeight;
-          
-          if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
-              activeSection = index + 1;
+            // Find the active section based on scroll position
+            sections.forEach((section, index) => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    activeSection = index + 1;
+                }
+            });
+            if (activeSection !== currSection) {
+                prevSection = currSection;
+                currSection = activeSection;
+                gsap.to(sections[prevSection - 1], { opacity: 0, duration: 0.4 });
+                gsap.to(sections[currSection - 1], { opacity: 1, duration: 0.4 });
+                handleSectionChange(activeSection);
             }
         });
-        
-        handleSectionChange(activeSection);
-    });
-}
+    }
 });
-
 function handleSectionChange(activeSection) {
     console.log(activeSection);
     if (activeSection === 1) {
@@ -149,7 +156,8 @@ gltfLoader.load(
     (gltf) =>
     {
         model = gltf.scene.children[0];
-        model.scale.set(0.01, 0.01, 0.01);
+        const scaleFactor = 0.025;
+        model.scale.set(scaleFactor, scaleFactor, scaleFactor);
         model.rotation.y = Math.PI;
         scene.add(model); 
         fillLight.target = model;
