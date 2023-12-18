@@ -69,10 +69,12 @@ body {
   left:20%;
 }
 .slogan{
-  font-size:40px;
-  font-family: Michroma;
-  font-style: normal;
-  font-weight: 700;
+  position:absolute;
+  font-size:300px;
+  font-family: bullhead;
+  font-weight: 100;
+  rotate: -10deg;
+  left:30%;
 }
 #blob{
   background-color:white;
@@ -90,12 +92,6 @@ body {
   filter:blur(150px);
   z-index:1;
 }
-/* #blur{
-  position: absolute;
-  z-index:1;
-  backdrop-filter: blur(150px);
-  background: transparent;
-} */
 
 @keyframes rotate{
   from{
@@ -107,4 +103,36 @@ body {
   to  {
     rotate:360deg;
   }
+}
+
+@font-face{
+  font-family:bullhead;
+  src:url(../public/fonts/Bullhead.ttf);
+}
+
+/* below is the code for the loading bar */
+.ldBar {
+  position: absolute;
+  top:49%;
+  left:17.5%;
+}
+.ldBar.label-center > .ldBar-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-shadow: 0 0 3px #fff;
+  opacity: 0;
+}
+.ldBar-label:after {
+  content: "%";
+  display: inline;
+}
+.ldBar.no-percent .ldBar-label:after {
+  content: "";
+}
+
+.ldBar{
+  z-index: 10;
 }

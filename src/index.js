@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import gsap from 'gsap';
 import './style.css';
-
+import '../public/ext-js/load';
 const container = document.querySelector('.webgl-content');
 const sizes = {
   width: container.clientWidth * 1,
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.scroll-container').addEventListener('scroll', function() {
             const scrollPos = this.scrollTop;
             let activeSection = 0;
-            slogan.style.opacity = 0;
+            gsap.to(slogan, { duration: 0.3, opacity: 0 })
             sections.forEach((section, index) => {
                 const sectionTop = section.offsetTop;
                 const sectionHeight = section.offsetHeight;
@@ -166,8 +166,7 @@ scene.add(frontLight);
 const gltfLoader = new GLTFLoader();
 gltfLoader.load(
     'models/gltf/scene.gltf',
-    (gltf) =>
-    {
+    (gltf) => {
         model = gltf.scene.children[0];
         const scaleFactor = 0.025;
         model.scale.set(scaleFactor, scaleFactor, scaleFactor);
@@ -175,33 +174,26 @@ gltfLoader.load(
         scene.add(model); 
         fillLight.target = model;
         frontLight.target = model;
+        const webgl = document.querySelector('.webgl');
+        webgl.style.opacity = 0; // Set initial opacity to 0
+        gsap.from(model.scale, { duration: 1, x: 0, y: 0, z: 0, ease: 'power2.out' });
+        gsap.from(model.rotation, { duration: 1, y: -Math.PI, ease: 'power2.out' });
+        gsap.to(webgl, { duration: 0.5, opacity: 1 ,ease:'power2.inOut'}); // Fade in the webgl content
+        const ldBarElement = document.querySelector('.ldBar');
+        ldBarElement.style.display = 'none'; // Hides the ldBar element
     },
-    (progress) =>
-    {
-        console.log('progress', progress);
+    // show in % how much of the model has been loaded
+    (xhr) => {
+        const progress = (xhr.loaded / xhr.total).toFixed(2); // Calculate the progress percentage
+        const ldBarElement = document.querySelector('.ldBar');
+        ldBarElement.setAttribute('data-value', progress * 100); // Update ldBar value
     },
-    (error) =>
-    {
+    (error) => {
         console.log('error', error);
     }
 );
+
         
-
-
-
-// const container_ = document.querySelector('.webgl-content');
-
-// function morphBackground() {
-//   gsap.to(container_, {
-//     duration: 3,
-//     backgroundSize: '100% 100%', // Transition to full background size
-//     ease: 'power2.inOut',
-//     onComplete: function () {
-//       // Change the background to transparent after animation completion
-//       container.style.background = 'transparent';
-//     }
-//   });
-// }
 
 // Get the elements
 const webglElement = document.querySelector('.webgl');
@@ -220,10 +212,13 @@ const blurWidth =  webglRect.width;
 const blurHeight = webglRect.height;
 // Set the position of blob element to align centers
 blobElement.style.position = 'absolute';
-blobElement.style.left = `${webglCenterX - blobWidth / 2}px`; // Adjusting for half the width
-blobElement.style.top = `${webglCenterY - blobHeight / 2}px`; // Adjusting for half the height
+blobElement.style.left = `${webglCenterX - blobWidth / 2}px`;
+blobElement.style.top = `${webglCenterY - blobHeight / 2}px`;
 blurElement.style.position = 'absolute';
-blurElement.style.left = `${webglCenterX - blurWidth / 2}px`; // Adjusting for half the width
-blurElement.style.top = `${webglCenterY - blurHeight / 2}px`; // Adjusting for half the height
-blurElement.style.width = `${blurWidth}px`; // Adjusting for half the width
-blurElement.style.height = `${blurHeight}px`; // Adjusting for half the height
+blurElement.style.left = `${webglCenterX - blurWidth / 2}px`;
+blurElement.style.top = `${webglCenterY - blurHeight / 2}px`;
+blurElement.style.width = `${blurWidth}px`;
+blurElement.style.height = `${blurHeight}px`;
+
+const webglContent = document.querySelector('.webgl-content');
+const ldBar = document.querySelector('.ldBar');
